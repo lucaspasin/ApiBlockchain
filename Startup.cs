@@ -1,4 +1,5 @@
 using ApiBlockchain.Config;
+using ApiBlockchain.Miner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,10 @@ namespace ApiBlockchain
         {
             services.AddLogging(configure => configure.AddSerilog());
 
+            services.AddSingleton<TransactionPool>()
+                .AddSingleton<BlockMiner>()
+                .AddSingleton<AppSettings>();
+
             services.AddControllers();
 
             // configure strongly typed settings objects
@@ -40,7 +45,7 @@ namespace ApiBlockchain
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AytyTechAtlasIntegrationSapApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiBlockchain", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -87,7 +92,7 @@ namespace ApiBlockchain
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "AytyTechDoutorIEAPI v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "ApiBlockchain v1"));
         }
     }
 }
